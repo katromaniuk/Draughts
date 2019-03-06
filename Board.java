@@ -8,8 +8,11 @@ public class Board {
 
         JFrame checkers = new JFrame("Draughts");
         JPanel panel = new JPanel();
+        //GridBagLayout bagLayout = new GridBagLayout();
+        GridLayout layout = new GridLayout(8,8,0,0);
+        //GridBagConstraints c = new GridBagConstraints();
+        //c.fill = GridBagConstraints.BOTH;
         Square[] s = new Square[64];
-        GridLayout layout = new GridLayout(8, 8);
 
 
         for (int i=0; i<64; i++) {
@@ -36,8 +39,9 @@ public class Board {
         }
 
         checkers.setContentPane(panel);
-        checkers.setSize(1000, 1000);
+        checkers.setSize(800, 800);
         checkers.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        checkers.setResizable(false);
         checkers.setVisible(true);
 
     }

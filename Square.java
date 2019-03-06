@@ -26,6 +26,7 @@ public class Square {
         b.setAlignmentY(y);
         i = new ImageIcon(s);
         b.setIcon(i);
+        b.setSize(40, 40);
         p.add(b);
     }
 }
