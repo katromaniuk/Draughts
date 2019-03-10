@@ -7,6 +7,7 @@ public class Square {
     private JButton b = new JButton(i);
     private int Xlocation;
     private int Ylocation;
+    private String whatPiece;
 
 
     //get location on the X axis
@@ -26,11 +27,25 @@ public class Square {
     *string with the name of the file used as a graphical
     *representation of the square
     */
-    public Square(int x, int y, JPanel p, String s) {
+    public Square(int x, int y, JPanel p, String s, String pi) {
 
         Xlocation = x;
         Ylocation = y;
-        i = new ImageIcon(s);
+
+        if (pi.contentEquals("WHITE") == true) {
+            whatPiece = pi;
+            i = new ImageIcon("white.png");
+        }
+        else if (pi.contentEquals("RED") == true) {
+            whatPiece = pi;
+            i = new ImageIcon("red.png");
+        }
+        else {
+            pi = "NONE";
+            whatPiece = pi;
+            i = new ImageIcon(s);
+        }
+
         b.setIcon(i);
         p.add(b);
     }
