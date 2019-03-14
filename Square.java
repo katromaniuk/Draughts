@@ -13,6 +13,7 @@ public class Square extends JButton {
     private ImageIcon white = new ImageIcon("white.png");
     private ImageIcon emptyWhite = new ImageIcon("empty.png");
     private ImageIcon red = new ImageIcon("red.png");
+    private ImageIcon selected = new ImageIcon("selected.png");
     private int Ylocation;
     private int Xlocation;
     private int whatPiece;
@@ -44,36 +45,55 @@ public class Square extends JButton {
         return false;
     }
 
-    public boolean canMove(Square squ) {
-        int x = squ.getXlocation();
-        int y = squ.getYlocation();
+    public boolean canMoveTo(Square sqr) {
+        
+        int x = sqr.getXlocation();
+        int y = sqr.getYlocation();
 
         if (this.getPiece() == WHITE) {
         
-            if (this.getYlocation() - 1 == y && this.getXlocation() - 1 == x) {
+            if (sqr.getPiece() == NONE_WHITE && this.getYlocation() - 1 == y && this.getXlocation() - 1 == x) {
                 return true;
             }
-            else if (this.getYlocation() - 1 == y && this.getXlocation() + 1 == x) {
+            else if (sqr.getPiece() == NONE_WHITE && this.getYlocation() - 1 == y && this.getXlocation() + 1 == x) {
                 return true;
             }
             return false;
         }
         else if (this.getPiece() == RED) {
 
-            if (this.getYlocation() + 1 == y && this.getXlocation() - 1 == x) {
+            if (sqr.getPiece() == NONE_WHITE && this.getYlocation() + 1 == y && this.getXlocation() - 1 == x) {
                 return true;
             }
-            else if (this.getYlocation() + 1 == y && this.getXlocation() + 1 == x) {
+            else if (sqr.getPiece() == NONE_WHITE && this.getYlocation() + 1 == y && this.getXlocation() + 1 == x) {
                 return true;
             }
             return false;
         }
         return false;
     }
+    
+    public void highlightMove(Square square) {
 
-    //public boolean canMoveTo() {
+            if (this.canMoveTo(square) == true) {
+                square.setIcon(selected);
+            }
+            return;
+    }
 
-    //}
+    public void removeHighlight(Square[][] sq) {
+        for (int i=0; i<8; i++) {
+            for (int j=0; j<8; j++) {
+                if (sq[i][j].getPiece() == NONE_WHITE) {
+                    sq[i][j].setIcon(emptyWhite);
+                }
+                else {
+                    continue;
+                }
+            }
+        }
+        return;
+    }
 
     public void moveTo(Square sq) {
 
