@@ -70,7 +70,7 @@ public class Board implements ActionListener {
         s[x][y].setPiece(RED);
     }
 
-
+    /* There is still a bug unabling the pieces from the upper and lower edge to move!!*/
 
     //moving white pieces when for one tile to another
     public void actionPerformed(ActionEvent e) {
@@ -81,26 +81,48 @@ public class Board implements ActionListener {
         for (int i=0; i<8; i++) {
             for (int j=0; j<8; j++) {
                 //if source is one of the squares and there was no previous click get coordinates of the square and indicate there was a click
-                if (source == s[j][i] && state == 0 && (s[j][i].pieceEquals(WHITE) == true || s[j][i].pieceEquals(RED) == true)) {
+                if (source == s[j][i] && state == 0) {
+                    if (i == 0 && s[j][i].getPiece() == WHITE) {
+                        s[j][i].highlightMove(s[j-1][i+1]);
+                    }
+                    else if (i == 7 && s[j][i].getPiece() == WHITE) {
+                        s[j][i].highlightMove(s[j-1][i-1]);
+                    }
+                    else if (i == 0 && s[j][i].getPiece() == RED) {
+                        s[j][i].highlightMove(s[j+1][i+1]);
+                    }
+                    else if (i == 7 && s[j][i].getPiece() == RED) {
+                        s[j][i].highlightMove(s[j+1][i-1]);
+                    }
+                    else {
+                        s[j][i].highlightMove(s[j-1][i+1]);
+                        s[j][i].highlightMove(s[j-1][i-1]);
+                        s[j][i].highlightMove(s[j+1][i+1]);
+                        s[j][i].highlightMove(s[j+1][i-1]);
+                    }
+
                     firstX = s[j][i].getXlocation();
                     firstY = s[j][i].getYlocation();
                     state = 1;
                 }
                 //if there was a click before, check if the source now is one of the squares plus whether it doesn't conatain any piece
                 //source can only be x-1,y-1 from the first click or x+1,y-1
-                else if (source == s[j][i] && state == 1 && s[j][i].pieceEquals(NONE_WHITE) == true) {
-                    if (s[firstY][firstX].canMove(s[j][i]) == true) {
-                        s[firstY][firstX].moveTo(s[j][i]);
-                        //set the firstly selected square icon to empty white square and its status to white, no piece
-                        //set the state back to 0 so new "first" click can occur         
-                        state = 0;
-                        continue;
-                    }
+                else if (source == s[j][i] && state == 1 && s[firstY][firstX].canMoveTo(s[j][i]) == true) {
+                    s[firstY][firstX].moveTo(s[j][i]);
+                    s[j][i].removeHighlight(s);
+
+                    //set the firstly selected square icon to empty white square and its status to white, no piece
+                    //set the state back to 0 so new "first" click can occur         
+                    state = 0;
+                }
+                else if (source == s[j][i] && state == 1 && s[firstY][firstX].canMoveTo(s[j][i]) == false) {
+                    s[j][i].removeHighlight(s);
                     state = 0;
                 }
                 //if the source is one of the squares but its field is black, no piece
                 //no click can occur, state is still 0 - back to the beginning 
                 else if (source == s[j][i] && state == 0 && s[j][i].pieceEquals(NONE_BLACK)) {
+                    s[j][i].removeHighlight(s);
                     state = 0;
                 }
             }
