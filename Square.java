@@ -1,23 +1,92 @@
 import javax.swing.*;
+import javax.xml.transform.Source;
+
+import javafx.event.ActionEvent;
+
 import java.awt.*;
+import java.awt.event.*;
+import java.util.EventObject;
 
-public class Square {
+public class Square extends JButton {
 
-    private ImageIcon i;
-    private JButton b = new JButton(i);
-    private int Xlocation;
+    private ImageIcon icon;
+    private ImageIcon white = new ImageIcon("white.png");
+    private ImageIcon emptyWhite = new ImageIcon("empty.png");
+    private ImageIcon red = new ImageIcon("red.png");
     private int Ylocation;
-    private String whatPiece;
+    private int Xlocation;
+    private int whatPiece;
+    private static final int NONE_WHITE = 0, NONE_BLACK = 1, WHITE = 2, RED = 3; 
 
 
-    //get location on the X axis
-    public int getXlocation() { 
+    //get X location on board
+    public int getXlocation() {
         return Xlocation;
     }
 
-    //get location on the Y axis
     public int getYlocation() {
         return Ylocation;
+    }
+
+    public int getPiece() {
+        return whatPiece;
+    }
+
+    public void setPiece(int piece) {
+        whatPiece = piece;
+    }
+
+
+    public boolean pieceEquals(int n) {
+        if (this.getPiece() == n) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean canMove(Square squ) {
+        int x = squ.getXlocation();
+        int y = squ.getYlocation();
+
+        if (this.getPiece() == WHITE) {
+        
+            if (this.getYlocation() - 1 == y && this.getXlocation() - 1 == x) {
+                return true;
+            }
+            else if (this.getYlocation() - 1 == y && this.getXlocation() + 1 == x) {
+                return true;
+            }
+            return false;
+        }
+        else if (this.getPiece() == RED) {
+
+            if (this.getYlocation() + 1 == y && this.getXlocation() - 1 == x) {
+                return true;
+            }
+            else if (this.getYlocation() + 1 == y && this.getXlocation() + 1 == x) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    //public boolean canMoveTo() {
+
+    //}
+
+    public void moveTo(Square sq) {
+
+        if (this.pieceEquals(WHITE)) {
+            sq.setIcon(white);
+            sq.setPiece(WHITE);
+        }
+        else if (this.pieceEquals(RED)) {
+            sq.setIcon(red);
+            sq.setPiece(RED);
+        }
+        this.setIcon(emptyWhite);
+        this.setPiece(NONE_WHITE);
     }
 
     //clickable Square constructor, used to fill the board
@@ -27,26 +96,27 @@ public class Square {
     *string with the name of the file used as a graphical
     *representation of the square
     */
-    public Square(int x, int y, JPanel p, String s, String pi) {
+    public Square(int x, int y, int pi) {
 
         Xlocation = x;
         Ylocation = y;
 
-        if (pi.contentEquals("WHITE") == true) {
+        if (pi == WHITE) {
             whatPiece = pi;
-            i = new ImageIcon("white.png");
+            icon = new ImageIcon("white.png");
         }
-        else if (pi.contentEquals("RED") == true) {
+        else if (pi == RED) {
             whatPiece = pi;
-            i = new ImageIcon("red.png");
+            icon = new ImageIcon("red.png");
+        }
+        else if (pi == NONE_WHITE) {
+            whatPiece = pi;
+            icon = new ImageIcon("empty.png");
         }
         else {
-            pi = "NONE";
-            whatPiece = pi;
-            i = new ImageIcon(s);
+            whatPiece = NONE_BLACK;
+            icon = new ImageIcon("empty2.png");
         }
-
-        b.setIcon(i);
-        p.add(b);
+        this.setIcon(icon);
     }
 }
