@@ -11,7 +11,7 @@ public class Board implements ActionListener {
     private ImageIcon white = new ImageIcon("white.png");
     private ImageIcon red = new ImageIcon("red.png");
     private int firstX, firstY, state = 0;
-    private static final int NONE_WHITE = 0, NONE_BLACK = 1, WHITE = 2, RED = 3;
+    private static final int NONE_WHITE = 0, NONE_BLACK = 1, WHITE = 2, RED = 3, WHITE_KING = 4, RED_KING = 5;
     private GridLayout layout = new GridLayout(8,8,0,0);
     private Square[][] s = new Square[8][8];
     //private int returnValueX = 0;             only needed for a location test
@@ -70,7 +70,6 @@ public class Board implements ActionListener {
         s[x][y].setPiece(RED);
     }
 
-    /* There is still a bug unabling the pieces from the upper and lower edge to move!!*/
 
     //moving white pieces when for one tile to another
     public void actionPerformed(ActionEvent e) {
@@ -82,16 +81,28 @@ public class Board implements ActionListener {
             for (int j=0; j<8; j++) {
                 //if source is one of the squares and there was no previous click get coordinates of the square and indicate there was a click
                 if (source == s[j][i] && state == 0) {
+                    //setting additional conditons for white pieces on side edges
                     if (i == 0 && s[j][i].getPiece() == WHITE) {
                         s[j][i].highlightMove(s[j-1][i+1]);
                     }
                     else if (i == 7 && s[j][i].getPiece() == WHITE) {
                         s[j][i].highlightMove(s[j-1][i-1]);
                     }
+                    //setting additional condition for red pieces on edges
                     else if (i == 0 && s[j][i].getPiece() == RED) {
                         s[j][i].highlightMove(s[j+1][i+1]);
                     }
                     else if (i == 7 && s[j][i].getPiece() == RED) {
+                        s[j][i].highlightMove(s[j+1][i-1]);
+                    }
+                    //setting additional condition for pieces on the upper edge
+                    else if (j == 7 && (i == 2 || i == 4 || i == 6)) {
+                        s[j][i].highlightMove(s[j-1][i+1]);
+                        s[j][i].highlightMove(s[j-1][i-1]);
+                    }
+                    //setting additional condition for pieces on the lower edge
+                    else if (j == 0 && (i == 1 || i == 3 || i == 5)) {
+                        s[j][i].highlightMove(s[j+1][i+1]);
                         s[j][i].highlightMove(s[j+1][i-1]);
                     }
                     else {
@@ -100,27 +111,26 @@ public class Board implements ActionListener {
                         s[j][i].highlightMove(s[j+1][i+1]);
                         s[j][i].highlightMove(s[j+1][i-1]);
                     }
-
+                    //remembering the location of the firstly selected piece
                     firstX = s[j][i].getXlocation();
                     firstY = s[j][i].getYlocation();
                     state = 1;
                 }
-                //if there was a click before, check if the source now is one of the squares plus whether it doesn't conatain any piece
+                //if there was a click before, check if the source now is one of the squares plus whether it is a valid move...
                 //source can only be x-1,y-1 from the first click or x+1,y-1
                 else if (source == s[j][i] && state == 1 && s[firstY][firstX].canMoveTo(s[j][i]) == true) {
                     s[firstY][firstX].moveTo(s[j][i]);
                     s[j][i].removeHighlight(s);
-
-                    //set the firstly selected square icon to empty white square and its status to white, no piece
                     //set the state back to 0 so new "first" click can occur         
                     state = 0;
                 }
+                //... if it is not a valid move remove the highlight and set state back to 0
                 else if (source == s[j][i] && state == 1 && s[firstY][firstX].canMoveTo(s[j][i]) == false) {
                     s[j][i].removeHighlight(s);
                     state = 0;
                 }
-                //if the source is one of the squares but its field is black, no piece
-                //no click can occur, state is still 0 - back to the beginning 
+                //if the source is one of the squares but its field is black
+                //no click can occur, removing highlight, state is still 0 - back to the beginning 
                 else if (source == s[j][i] && state == 0 && s[j][i].pieceEquals(NONE_BLACK)) {
                     s[j][i].removeHighlight(s);
                     state = 0;
