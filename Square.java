@@ -17,54 +17,58 @@ public class Square extends JButton {
     private int Ylocation;
     private int Xlocation;
     private int whatPiece;
-    private static final int NONE_WHITE = 0, NONE_BLACK = 1, WHITE = 2, RED = 3; 
+    private static final int NONE_WHITE = 0, NONE_BLACK = 1, WHITE = 2, RED = 3, WHITE_KING = 4, RED_KING = 5;
 
 
     //get X location on board
     public int getXlocation() {
         return Xlocation;
     }
-
+    //get Y location on board
     public int getYlocation() {
         return Ylocation;
     }
-
+    //return the type of piece that is placed on the square
     public int getPiece() {
         return whatPiece;
     }
-
+    //set the type of a piece that is on the sqaure
     public void setPiece(int piece) {
         whatPiece = piece;
     }
 
-
+    //check if the type of a piece on a square equals to the piece provided as a parameter
     public boolean pieceEquals(int n) {
         if (this.getPiece() == n) {
             return true;
         }
         return false;
     }
-
+    //method checking where the current piece can move based on the type of a piece that is currently on a square
+    //takes another square as a parameter, the one we want clasify as a valid move
     public boolean canMoveTo(Square sqr) {
         
         int x = sqr.getXlocation();
         int y = sqr.getYlocation();
 
         if (this.getPiece() == WHITE) {
-        
+            
+            //if the piece if white the square provided as a parameter can only be x-1 and y-1 from the current square OR...
             if (sqr.getPiece() == NONE_WHITE && this.getYlocation() - 1 == y && this.getXlocation() - 1 == x) {
                 return true;
             }
+            //... it can be x+1 and y-1 from the current square
             else if (sqr.getPiece() == NONE_WHITE && this.getYlocation() - 1 == y && this.getXlocation() + 1 == x) {
                 return true;
             }
             return false;
         }
         else if (this.getPiece() == RED) {
-
+            //if the piece is red square provided as a parameter can only be x-1 and y+1 from the current square OR...
             if (sqr.getPiece() == NONE_WHITE && this.getYlocation() + 1 == y && this.getXlocation() - 1 == x) {
                 return true;
             }
+            //... it can be x+1 and y+1 from the current square
             else if (sqr.getPiece() == NONE_WHITE && this.getYlocation() + 1 == y && this.getXlocation() + 1 == x) {
                 return true;
             }
@@ -73,6 +77,7 @@ public class Square extends JButton {
         return false;
     }
     
+    //highlight the square provided as a parameter provided that parameter is a valid move 
     public void highlightMove(Square square) {
 
             if (this.canMoveTo(square) == true) {
@@ -81,6 +86,7 @@ public class Square extends JButton {
             return;
     }
 
+    //removing the highlight from the square provided as a parameter if no piece was placed on it
     public void removeHighlight(Square[][] sq) {
         for (int i=0; i<8; i++) {
             for (int j=0; j<8; j++) {
@@ -95,6 +101,8 @@ public class Square extends JButton {
         return;
     }
 
+    //moving the current current piece to the square provided as a parameter (changing their icons)
+    //also changing the status of the square based on a piece that was put on it
     public void moveTo(Square sq) {
 
         if (this.pieceEquals(WHITE)) {
@@ -109,7 +117,7 @@ public class Square extends JButton {
         this.setPiece(NONE_WHITE);
     }
 
-    //clickable Square constructor, used to fill the board
+    //clickable Square constructor, used to fill in the board
     /*Takes up integer to indicate the location on the x axis,
     *another integer for the location on the y axis,
     * panel on which the square is to be placed,
