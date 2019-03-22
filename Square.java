@@ -16,6 +16,10 @@ public class Square extends JButton {
     private ImageIcon red_king = new ImageIcon("red-king.png");
     private ImageIcon white_king = new ImageIcon("white-king.png");
     private ImageIcon selected = new ImageIcon("selected.png");
+    private boolean isEnemyRedLeft = false;
+    private boolean isEnemyRedRight = false;
+    private boolean isEnemyWhiteLeft = false;
+    private boolean isEnemyWhiteRight = false;
     private int Ylocation;
     private int Xlocation;
     private int whatPiece;
@@ -57,16 +61,63 @@ public class Square extends JButton {
         int b = this.getYlocation();
 
 
-        if (this.getPiece() == WHITE) {
+        if (this.pieceEquals(WHITE)) {
             
             //if the piece if white the square provided as a parameter can only be x-1 and y-1 from the current square OR...
-            if (sqr.getPiece() == NONE_WHITE && b - 1 == y && (a - 1 == x || a + 1 == x)) {
+            if (sqr.pieceEquals(NONE_WHITE) && b - 1 == y && (a - 1 == x || a + 1 == x)) {
+                return true;
+            }
+            else if (sqr.pieceEquals(RED) && b - 1 == y && a - 1 == x) {
+                isEnemyRedLeft = true;
+                return false;
+            }
+            else if (sqr.pieceEquals(RED) && b - 1 == y && a + 1 == x) {
+                isEnemyRedRight = true;
+                return false;
+            }
+        }
+        else if (this.pieceEquals(RED)) {
+            //if the piece is red square provided as a parameter can only be x-1 and y+1 from the current square OR...
+            if (sqr.pieceEquals(NONE_WHITE) && b + 1 == y && (a - 1 == x || a + 1 == x)) {
+                return true;
+            }
+            else if (sqr.pieceEquals(WHITE) && b + 1 == y && a + 1 == x) {
+                isEnemyWhiteRight = true;
+                return false;
+            }
+            else if (sqr.pieceEquals(WHITE) && b + 1 == y && a - 1 == x) {
+                isEnemyWhiteLeft = true;
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public boolean canJumpTo(Square sqr) {
+        
+        int x = sqr.getXlocation();
+        int y = sqr.getYlocation();
+
+        int a = this.getXlocation();
+        int b = this.getYlocation();
+
+
+        if (this.pieceEquals(WHITE)) {
+            
+            //if the piece if white the square provided as a parameter can only be x-1 and y-1 from the current square OR...
+            if (sqr.pieceEquals(NONE_WHITE) && b - 2 == y && a - 2 == x && isEnemyRedLeft == true) {
+                return true;
+            }
+            else if (sqr.pieceEquals(NONE_WHITE) && b - 2 == y && a + 2 == x && isEnemyRedRight == true) {
                 return true;
             }
         }
-        else if (this.getPiece() == RED) {
+        else if (this.pieceEquals(RED)) {
             //if the piece is red square provided as a parameter can only be x-1 and y+1 from the current square OR...
-            if (sqr.getPiece() == NONE_WHITE && b + 1 == y && (a - 1 == x || a + 1 == x)) {
+            if (sqr.pieceEquals(NONE_WHITE) && b + 2 == y && a - 2 == x && isEnemyWhiteLeft == true) {
+                return true;
+            }
+            else if (sqr.pieceEquals(NONE_WHITE) && b + 2 == y && a + 2 == x && isEnemyWhiteRight == true) {
                 return true;
             }
         }
@@ -74,9 +125,16 @@ public class Square extends JButton {
     }
     
     //highlight the square provided as a parameter provided that parameter is a valid move 
-    public void highlightMove(Square square) {
+    public void highlightMove(Square square, Square square2) {
 
-        if (this.canMoveTo(square) == true) {
+        boolean bool = this.canMoveTo(square);
+
+        if (this.canJumpTo(square2) == true) {
+            bool = false;
+            square2.setIcon(selected);
+            return;
+        }
+        else if (bool == true) {
             square.setIcon(selected);
         }
         return;
@@ -119,6 +177,11 @@ public class Square extends JButton {
         }
         this.setIcon(emptyWhite);
         this.setPiece(NONE_WHITE);
+
+        isEnemyRedLeft = false;
+        isEnemyWhiteLeft = false;
+        isEnemyRedRight = false;
+        isEnemyWhiteRight = false;
     }
 
     //clickable Square constructor, used to fill in the board
