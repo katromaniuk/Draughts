@@ -13,11 +13,13 @@ public class Square extends JButton {
     private ImageIcon white = new ImageIcon("white.png");
     private ImageIcon emptyWhite = new ImageIcon("empty.png");
     private ImageIcon red = new ImageIcon("red.png");
+    private ImageIcon red_king = new ImageIcon("red-king.png");
+    private ImageIcon white_king = new ImageIcon("white-king.png");
     private ImageIcon selected = new ImageIcon("selected.png");
     private int Ylocation;
     private int Xlocation;
     private int whatPiece;
-    private static final int NONE_WHITE = 0, NONE_BLACK = 1, WHITE = 2, RED = 3, WHITE_KING = 4, RED_KING = 5;
+    private static final int NONE_WHITE = 0, NONE_BLACK = 1, WHITE = 2, RED = 3, RED_KING = 4, WHITE_KING = 5;
 
 
     //get X location on board
@@ -51,28 +53,22 @@ public class Square extends JButton {
         int x = sqr.getXlocation();
         int y = sqr.getYlocation();
 
+        int a = this.getXlocation();
+        int b = this.getYlocation();
+
+
         if (this.getPiece() == WHITE) {
             
             //if the piece if white the square provided as a parameter can only be x-1 and y-1 from the current square OR...
-            if (sqr.getPiece() == NONE_WHITE && this.getYlocation() - 1 == y && this.getXlocation() - 1 == x) {
+            if (sqr.getPiece() == NONE_WHITE && b - 1 == y && (a - 1 == x || a + 1 == x)) {
                 return true;
             }
-            //... it can be x+1 and y-1 from the current square
-            else if (sqr.getPiece() == NONE_WHITE && this.getYlocation() - 1 == y && this.getXlocation() + 1 == x) {
-                return true;
-            }
-            return false;
         }
         else if (this.getPiece() == RED) {
             //if the piece is red square provided as a parameter can only be x-1 and y+1 from the current square OR...
-            if (sqr.getPiece() == NONE_WHITE && this.getYlocation() + 1 == y && this.getXlocation() - 1 == x) {
+            if (sqr.getPiece() == NONE_WHITE && b + 1 == y && (a - 1 == x || a + 1 == x)) {
                 return true;
             }
-            //... it can be x+1 and y+1 from the current square
-            else if (sqr.getPiece() == NONE_WHITE && this.getYlocation() + 1 == y && this.getXlocation() + 1 == x) {
-                return true;
-            }
-            return false;
         }
         return false;
     }
@@ -80,10 +76,10 @@ public class Square extends JButton {
     //highlight the square provided as a parameter provided that parameter is a valid move 
     public void highlightMove(Square square) {
 
-            if (this.canMoveTo(square) == true) {
-                square.setIcon(selected);
-            }
-            return;
+        if (this.canMoveTo(square) == true) {
+            square.setIcon(selected);
+        }
+        return;
     }
 
     //removing the highlight from the square provided as a parameter if no piece was placed on it
@@ -104,8 +100,16 @@ public class Square extends JButton {
     //moving the current current piece to the square provided as a parameter (changing their icons)
     //also changing the status of the square based on a piece that was put on it
     public void moveTo(Square sq) {
-
-        if (this.pieceEquals(WHITE)) {
+        
+        if (sq.getYlocation() == 0 && this.pieceEquals(WHITE)) {
+            sq.setIcon(white_king);
+            sq.setPiece(WHITE_KING);
+        }
+        else if (sq.getYlocation() == 7 && this.pieceEquals(RED)) {
+            sq.setIcon(red_king);
+            sq.setPiece(RED_KING);
+        }
+        else if (this.pieceEquals(WHITE)) {
             sq.setIcon(white);
             sq.setPiece(WHITE);
         }
