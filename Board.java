@@ -7,11 +7,8 @@ public class Board implements ActionListener {
 
     private JFrame checkers = new JFrame("Draughts");
     private JPanel panel = new JPanel();
-    private ImageIcon empty = new ImageIcon("empty.png");
     private ImageIcon white = new ImageIcon("white.png");
     private ImageIcon red = new ImageIcon("red.png");
-    private ImageIcon red_king = new ImageIcon("red-king.png");
-    private ImageIcon white_king = new ImageIcon("white-king.png");
     private int firstX, firstY, state = 0;
     private static final int NONE_WHITE = 0, NONE_BLACK = 1, WHITE = 2, RED = 3, RED_KING = 4, WHITE_KING = 5;
     private GridLayout layout = new GridLayout(8,8,0,0);
@@ -86,32 +83,94 @@ public class Board implements ActionListener {
                     //setting additional conditons for white pieces on side edges
                     if (s[j][i].pieceEquals(WHITE) || s[j][i].pieceEquals(RED)) {
                         if (i == 0) {
-                            if (s[j][i].getPiece() == WHITE)
-                                s[j][i].highlightMove(s[j-1][i+1]);
+                            if (s[j][i].pieceEquals(WHITE))
+                                if (j==1) {
+                                    s[j][i].highlightMove(s[j-1][i+1], s[j-1][i+1]);
+                                }
+                                else {
+                                    s[j][i].highlightMove(s[j-1][i+1], s[j-2][i+2]);
+                                }
                             else {
-                                s[j][i].highlightMove(s[j+1][i+1]);
+                                s[j][i].highlightMove(s[j+1][i+1], s[j+2][i+2]);
                             }
                         }
                         else if (i == 7) {
-                            if (s[j][i].getPiece() == WHITE)
-                                s[j][i].highlightMove(s[j-1][i-1]);
+                            if (s[j][i].pieceEquals(WHITE))
+                                s[j][i].highlightMove(s[j-1][i-1], s[j-2][i-2]);
                             else {
-                                s[j][i].highlightMove(s[j+1][i-1]);
+                                if (j==6) {
+                                    s[j][i].highlightMove(s[j+1][i-1], s[j+1][i-1]);
+                                }
+                                else {
+                                    s[j][i].highlightMove(s[j+1][i-1], s[j+2][i-2]);
+                                }
+                            }
+                        }
+                        else if (i == 1) {
+                            if (s[j][i].pieceEquals(WHITE)) {
+                                    s[j][i].highlightMove(s[j-1][i+1], s[j-2][i+2]);
+                                    s[j][i].highlightMove(s[j-1][i-1], s[j-2][i+2]);
+                            }
+                            else {
+                                if (i == 1 && j == 6) {
+                                    s[j][i].highlightMove(s[j+1][i+1], s[j+1][i+1]);
+                                    s[j][i].highlightMove(s[j+1][i-1], s[j+1][i+1]);
+                                }
+                                else {
+                                    s[j][i].highlightMove(s[j+1][i+1], s[j+2][i+2]);
+                                    s[j][i].highlightMove(s[j+1][i-1], s[j+2][i+2]);
+                                }
+                            }
+                        }
+                        else if (i==6) {
+                            if (s[j][i].pieceEquals(WHITE)) {
+                                if (j ==1) {
+                                    s[j][i].highlightMove(s[j-1][i-1], s[j-1][i-1]);
+                                    s[j][i].highlightMove(s[j-1][i+1], s[j-1][i-1]);
+                                }
+                                else {
+                                    s[j][i].highlightMove(s[j-1][i-1], s[j-2][i-2]);
+                                    s[j][i].highlightMove(s[j-1][i+1], s[j-2][i-2]);
+                                }
+                            }
+                            else {
+                                s[j][i].highlightMove(s[j+1][i-1], s[j+2][i-2]);
+                                s[j][i].highlightMove(s[j+1][i+1], s[j+2][i-2]);
                             }
                         }
                         else if (j+1>7 && s[j][i].pieceEquals(WHITE)) {
-                            s[j][i].highlightMove(s[j-1][i+1]);
-                            s[j][i].highlightMove(s[j-1][i-1]);
+                            s[j][i].highlightMove(s[j-1][i+1], s[j-2][i+2]);
+                            s[j][i].highlightMove(s[j-1][i-1], s[j-2][i-2]);
+                        }
+                        else if (j+2>7 && s[j][i].pieceEquals(WHITE)) {
+                            s[j][i].highlightMove(s[j-1][i+1], s[j-2][i+2]);
+                            s[j][i].highlightMove(s[j-1][i-1], s[j-2][i-2]);
+                        }
+                        else if (j+2>7 && s[j][i].pieceEquals(RED)) {
+                            s[j][i].highlightMove(s[j+1][i+1], s[j-1][i+1]);
+                            s[j][i].highlightMove(s[j+1][i-1], s[j-1][i-1]);
                         }
                         else if (j-1<0 && s[j][i].pieceEquals(RED)) {
-                            s[j][i].highlightMove(s[j+1][i+1]);
-                            s[j][i].highlightMove(s[j+1][i-1]);
+                            s[j][i].highlightMove(s[j+1][i+1], s[j+2][i+2]);
+                            s[j][i].highlightMove(s[j+1][i-1], s[j+2][i-2]);
+                        }
+                        else if (j-2<0 && s[j][i].pieceEquals(RED)) {
+                            s[j][i].highlightMove(s[j+1][i+1], s[j+2][i+2]);
+                            s[j][i].highlightMove(s[j+1][i-1], s[j+2][i-2]);
+                        }
+                        else if (j-2<0 && s[j][i].pieceEquals(WHITE)) {
+                            s[j][i].highlightMove(s[j-1][i+1], s[j+1][i+1]);
+                            s[j][i].highlightMove(s[j-1][i-1], s[j+1][i-1]);
                         }
                         else {
-                            s[j][i].highlightMove(s[j-1][i+1]);
-                            s[j][i].highlightMove(s[j-1][i-1]);
-                            s[j][i].highlightMove(s[j+1][i+1]);
-                            s[j][i].highlightMove(s[j+1][i-1]);
+                            s[j][i].highlightMove(s[j-1][i+1], s[j-2][i+2]);
+                            s[j][i].highlightMove(s[j-1][i+1], s[j-2][i-2]);
+                            s[j][i].highlightMove(s[j-1][i-1], s[j-2][i+2]);
+                            s[j][i].highlightMove(s[j-1][i-1], s[j-2][i-2]);
+                            s[j][i].highlightMove(s[j+1][i+1], s[j+2][i+2]);
+                            s[j][i].highlightMove(s[j+1][i+1], s[j+2][i-2]);
+                            s[j][i].highlightMove(s[j+1][i-1], s[j+2][i-2]);
+                            s[j][i].highlightMove(s[j+1][i-1], s[j+2][i+2]);
                         }
                     }
                     //remembering the location of the firstly selected piece
@@ -121,13 +180,13 @@ public class Board implements ActionListener {
                 }
                 //if there was a click before, check if the source now is one of the squares plus whether it is a valid move...
                 //source can only be x-1,y-1 from the first click or x+1,y-1
-                else if (source == s[j][i] && state == 1 && s[firstY][firstX].canMoveTo(s[j][i]) == true) {
+                else if (source == s[j][i] && state == 1 && (s[firstY][firstX].canMoveTo(s[j][i]) == true || s[firstY][firstX].canJumpTo(s[j][i]) == true)) {
                     s[firstY][firstX].moveTo(s[j][i]);
                     s[j][i].removeHighlight(s);
                     //set the state back to 0 so new "first" click can occur         
                     state = 0;
                 }
-                else if (source == s[j][i] && state == 1 && s[firstY][firstX].canMoveTo(s[j][i]) == false) {
+                else if (source == s[j][i] && state == 1 && (s[firstY][firstX].canMoveTo(s[j][i]) == false || s[firstY][firstX].canJumpTo(s[j][i]) == false)) {
                     s[j][i].removeHighlight(s);
                     state = 0;
                 }
